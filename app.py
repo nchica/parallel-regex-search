@@ -26,11 +26,16 @@ def get_filepaths_to_check():
 
 
 def check_file_for_regex_str(filepath, regex_str):
+    results = []
     with open(filepath) as file_to_check:
+        line_num = 1
+        lines_in_file = [line for line in file_to_check]
         for line in file_to_check:
             if string_contains_regex_str(line, regex_str):
                 formatted_line = line.rstrip('\n')
-                print(f"{filepath} -- {formatted_line}")
+                results.append(f"{filepath},{line_num},{formatted_line}")
+            line_num += 1
+    return results
 
 
 def main():
