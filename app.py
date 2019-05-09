@@ -11,9 +11,10 @@ EXTENSIONS = ['*.txt', '*.log']
 HEADERS = ["Filepath", "Line Number", "Line"]
 
 
-def prompt_regex_string():
+def prompt_arguments():
     response = input("Enter a regex string: ")
-    return response
+    num_threads = input("Enter number of threads: ")
+    return (response, num_threads)
 
 
 def string_contains_regex_str(string_to_search, regex_str):
@@ -31,8 +32,8 @@ def check_file_for_regex_str(filepath, regex_str):
     results = []
     with open(filepath) as file_to_check:
         line_num = 1
-        # lines_in_file = [line for line in file_to_check]
-        for line in file_to_check:
+        lines_in_file = file_to_check.readlines()
+        for line in lines_in_file:
             if string_contains_regex_str(line, regex_str):
                 formatted_line = line.rstrip('\n')
                 results.append([filepath, line_num, formatted_line])
@@ -49,8 +50,12 @@ def print_data_to_csv(filepath, data, headers=None):
 
 
 def main():
-    # Prompt regex string if not provided as command line arg
-    regex_str = prompt_regex_string() if len(sys.argv) <= 1 else sys.argv[1]
+    # Prompt arguments if not provided in command line args
+    if len(sys.argv) < 3:
+        regex_str, num_threads = prompt_arguments()
+    else:
+        regex_str = sys.argv[1]
+        num_threads = sys.argv[2]
 
     filepaths_to_check = get_filepaths_to_check()
 
