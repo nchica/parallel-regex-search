@@ -37,15 +37,15 @@ def check_file_for_regex_str(filepath, regex_str):
                 formatted_line = line.rstrip('\n')
                 results.append([filepath, line_num, formatted_line])
             line_num += 1
-    return results
+    return {'frequency': len(results), 'results': results}
 
 
-def print_results_to_csv(results):
-    print(results)
-    with open("results.csv", mode="w", newline='') as results_file:
-        results_writer = csv.writer(results_file)
-        results_writer.writerow(HEADERS)
-        results_writer.writerows(results)
+def print_data_to_csv(filepath, data, headers=None):
+    with open(filepath, mode="w", newline='') as data_file:
+        data_writer = csv.writer(data_file)
+        if headers:
+            data_writer.writerow(headers)
+        data_writer.writerows(data)
 
 
 def main():
@@ -54,11 +54,17 @@ def main():
 
     filepaths_to_check = get_filepaths_to_check()
 
+    overview = [["Filepath", f"Frequency of {regex_str}"]]
     results = []
-    for filepath in filepaths_to_check:
-        results.extend(check_file_for_regex_str(filepath, regex_str))
 
-    print_results_to_csv(results)
+    for filepath in filepaths_to_check:
+        regex_check_results = check_file_for_regex_str(filepath, regex_str)
+        print(regex_check_results)
+        overview.append([filepath, regex_check_results["frequency"]])
+        results.extend(regex_check_results["results"])
+
+    print_data_to_csv("results.csv", results, HEADERS)
+    print_data_to_csv("overview.csv", overview)
 
 
 if __name__ == '__main__':
