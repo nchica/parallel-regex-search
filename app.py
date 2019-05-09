@@ -4,7 +4,7 @@ import re
 import sys
 import threading
 
-from datetime import datetime
+from timeit import default_timer as timer
 from glob import glob
 from os.path import join
 
@@ -57,7 +57,7 @@ def check_file_for_regex_str(filepath, regex_str, num_threads=1):
         lines_in_file = file_to_check.readlines()
 
         print(f"File: {filepath}")
-        start_time = datetime.now()
+        start_time = timer()
         if num_threads == 1:
             results = check_lines_for_regex_str(
                 filepath, lines_in_file, regex_str, lock)
@@ -81,9 +81,10 @@ def check_file_for_regex_str(filepath, regex_str, num_threads=1):
             global thread_data
             results = thread_data
             thread_data = []
-        end_time = datetime.now()
-        execution_time = (end_time - start_time).microseconds
-        print(f"Execution time in microseconds: {execution_time}")
+        end_time = timer()
+        time_diff = end_time - start_time
+        execution_time = time_diff if time_diff > 0.0005 else 0.0
+        print(f"Execution time in seconds: {execution_time}")
 
     return {
         'frequency': len(results),
@@ -114,7 +115,7 @@ def main():
         [
             "Filepath",
             f"Frequency of {regex_str}",
-            "Exection time in microseconds"
+            "Exection time in seconds"
         ]
     ]
     results = [HEADERS]
