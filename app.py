@@ -52,7 +52,7 @@ def check_lines_for_regex_str(filepath, lines, regex_str, thread_lock=None):
 def check_file_for_regex_str(filepath, regex_str, num_threads=1):
     results = []
     lock = threading.Lock() if num_threads > 1 else None
-    with open(filepath) as file_to_check:
+    with open(filepath, errors='ignore') as file_to_check:
         lines_in_file = file_to_check.readlines()
         if num_threads == 1:
             results = check_lines_for_regex_str(
