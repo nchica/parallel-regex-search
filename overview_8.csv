@@ -1,0 +1,7 @@
+Filepath,Frequency of dog,Exection time in microseconds
+.\test1.txt,3,3965
+.\test2.txt,1,3989
+.\test4.txt,1000,13962
+.\test_large.txt,640,656702
+.\test_random_book.txt,10,103726
+.\test3.log,0,2991

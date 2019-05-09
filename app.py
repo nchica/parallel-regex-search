@@ -4,8 +4,9 @@ import re
 import sys
 import threading
 
-from os.path import join
+from datetime import datetime
 from glob import glob
+from os.path import join
 
 DIRECTORY_TO_CHECK = "."
 EXTENSIONS = ['*.txt', '*.log']
@@ -54,12 +55,14 @@ def check_file_for_regex_str(filepath, regex_str, num_threads=1):
     lock = threading.Lock() if num_threads > 1 else None
     with open(filepath, errors='ignore') as file_to_check:
         lines_in_file = file_to_check.readlines()
+
+        print(f"File: {filepath}")
+        start_time = datetime.now()
         if num_threads == 1:
             results = check_lines_for_regex_str(
                 filepath, lines_in_file, regex_str, lock)
         else:
             lines_per_thread = int(len(lines_in_file) / num_threads)
-            print(f"File: {filepath}")
             threads = []
             for thread_num in range(num_threads):
                 start_index = thread_num * lines_per_thread
@@ -78,8 +81,15 @@ def check_file_for_regex_str(filepath, regex_str, num_threads=1):
             global thread_data
             results = thread_data
             thread_data = []
+        end_time = datetime.now()
+        execution_time = (end_time - start_time).microseconds
+        print(f"Execution time in microseconds: {execution_time}")
 
-    return {'frequency': len(results), 'results': results}
+    return {
+        'frequency': len(results),
+        'results': results,
+        'time': execution_time
+    }
 
 
 def print_data_to_csv(filepath, data, headers=None):
@@ -100,13 +110,22 @@ def main():
 
     filepaths_to_check = get_filepaths_to_check()
 
-    overview = [["Filepath", f"Frequency of {regex_str}"]]
+    overview = [
+        [
+            "Filepath",
+            f"Frequency of {regex_str}",
+            "Exection time in microseconds"
+        ]
+    ]
     results = [HEADERS]
 
     for filepath in filepaths_to_check:
         regex_check_results = check_file_for_regex_str(
             filepath, regex_str, num_threads)
-        overview.append([filepath, regex_check_results["frequency"]])
+        overview.append([
+            filepath,
+            regex_check_results["frequency"],
+            regex_check_results["time"]])
         results.extend(regex_check_results["results"])
 
     print_data_to_csv("results.csv", results)
