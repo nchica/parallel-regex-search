@@ -55,15 +55,14 @@ def main():
     filepaths_to_check = get_filepaths_to_check()
 
     overview = [["Filepath", f"Frequency of {regex_str}"]]
-    results = []
+    results = [HEADERS]
 
     for filepath in filepaths_to_check:
         regex_check_results = check_file_for_regex_str(filepath, regex_str)
-        print(regex_check_results)
         overview.append([filepath, regex_check_results["frequency"]])
         results.extend(regex_check_results["results"])
 
-    print_data_to_csv("results.csv", results, HEADERS)
+    print_data_to_csv("results.csv", results)
     print_data_to_csv("overview.csv", overview)
 
 
