@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+results.csv
+overview.csv
+test_large_*.txt

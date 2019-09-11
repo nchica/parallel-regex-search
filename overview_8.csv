@@ -1,0 +1,8 @@
+Filepath,Frequency of dog,Exection time in seconds
+.\test1.txt,3,0.005399795000000006
+.\test2.txt,1,0.003348102999999998
+.\test4.txt,1000,0.018686769000000006
+.\test_large.txt,640,5.940993641
+.\test_large_2mil.txt,1280,11.230645743999998
+.\test_random_book.txt,10,0.09899364099999985
+.\test3.log,0,0.0038683080000012637
